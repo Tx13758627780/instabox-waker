@@ -1,0 +1,19 @@
+# secrets
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+.env
+.env.*
+*.pem
+*.key
+secrets/
+*.secret
+*token*.txt
+ibkey*.json
+.deploy.js
+
+# wrangler / node
+.wrangler/
+node_modules/
+dist/
+.DS_Store

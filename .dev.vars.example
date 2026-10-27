@@ -1,0 +1,5 @@
+# Copy to .dev.vars for `wrangler dev` (never commit .dev.vars).
+# Note: locally there is no Cloudflare Access in front, so every request returns 404
+# unless you send a valid Cf-Access-Jwt-Assertion header yourself.
+INSTABOX_API_KEY="REPLACE_WITH_INSTABOX_API_KEY"
+CF_API_TOKEN="REPLACE_WITH_SCOPED_CF_API_TOKEN"
