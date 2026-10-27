@@ -1,6 +1,6 @@
 # instabox-waker — Wrangler config template.
 # Copy as-is, fill in the placeholders, then `wrangler deploy`.
-# Secrets (INSTABOX_API_KEY, CF_API_TOKEN) are NOT stored here: use `wrangler secret put`.
+# Secrets (INSTABOX_API_KEY, CF_API_TOKEN, SETUP_TOKEN) are NOT stored here: use `wrangler secret put`.
 name = "instabox-waker"
 main = "worker.js"
 compatibility_date = "2026-10-01"
@@ -15,11 +15,23 @@ routes = [
 
 # Intentionally NO [triggers] / crons: this Worker never wakes the machine on its own.
 
+# Strongly consistent state: setup-done flag, admin list, pending first-run email.
+# SQLite-backed Durable Objects are available on the Workers Free plan.
+[[durable_objects.bindings]]
+name = "WAKER_STATE"
+class_name = "WakerState"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["WakerState"]
+
 [vars]
 INSTABOX_MACHINE_ID = "m_xxxxxxxxxxxxxxxxxxxxxxxxxx"        # `instabox ls`
 ACCESS_TEAM_DOMAIN  = "your-team.cloudflareaccess.com"      # Zero Trust team domain, no https://
 ACCESS_AUD          = "REPLACE_WITH_ACCESS_APP_AUD_TAG"     # Access app → Overview → Application Audience (AUD) Tag
-ADMIN_EMAILS        = "owner@example.com"                   # comma-separated; can open /admin, cannot be removed
 CF_ACCOUNT_ID       = "REPLACE_WITH_CLOUDFLARE_ACCOUNT_ID"
 ACCESS_POLICY_ID    = "REPLACE_WITH_ACCESS_POLICY_ID"       # the reusable Allow policy attached to the app
-DISPLAY_TIMEZONE    = ""                                    # optional IANA zone, e.g. "Asia/Shanghai"; empty = browser zone
+SETUP_ACCESS_APP_ID = ""                                    # optional: id of the temporary <host>/setup bypass app
+DISPLAY_TIMEZONE    = ""                                    # optional IANA zone, e.g. "Europe/Berlin"; empty = browser zone
+SERVICE_TOKEN_IDS   = ""                                    # optional: Access service-token Client IDs allowed as non-admin clients
+# ADMIN_EMAILS      = ""                                    # legacy fallback only: setting it skips first-run setup

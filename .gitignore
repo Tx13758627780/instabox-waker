@@ -17,3 +17,8 @@ ibkey*.json
 node_modules/
 dist/
 .DS_Store
+
+# first-run / deploy helper files (secrets)
+.setup-token
+.worker-cf-token
+.instabox-key
